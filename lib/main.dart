@@ -1,8 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   runApp(const MyApp());
 }
 
@@ -35,6 +39,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    splashInit();
+  }
+
+  void splashInit() async {
+    await Future.delayed(const Duration(seconds: 10));
+    FlutterNativeSplash.remove();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
