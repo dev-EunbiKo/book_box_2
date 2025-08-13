@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:book_box_2/core/navigation/navigation_service.dart';
 import 'package:book_box_2/core/navigation/routes.dart';
+import 'package:book_box_2/features/main/main_home/presentation/main_page.dart';
 import 'package:book_box_2/gen/assets.gen.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
 import 'package:book_box_2/gen/fonts.gen.dart';
@@ -24,6 +25,8 @@ class NavigationState extends State<Navigation> {
   static final naviKey = GlobalKey();
   late int selectedIndex;
 
+  final List<Widget> _pages = [const MainPage(), Container()];
+
   @override
   void initState() {
     super.initState();
@@ -33,16 +36,10 @@ class NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('')),
+      extendBody: true,
       body: Center(
-        child: Column(
-          children: [
-            Text('Here is'), Text('Navigation'),
-            Text('selectedIndex >>> $selectedIndex'),
-
-            // TODO: 위아래 틀 제외한 페이지 넣기
-          ],
-        ),
+        // TODO: 위아래 틀 제외한 페이지 넣기
+        child: _pages[selectedIndex],
       ),
       bottomNavigationBar: Container(
         height: 88.h,
