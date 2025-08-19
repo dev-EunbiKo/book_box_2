@@ -4,8 +4,6 @@ class KStringNaviBar {
   static const String myPage = '마이페이지';
 }
 
-class EStringNaviBar {
-  static const String home = 'Home';
-  static const String search = 'Search';
-  static const String myPage = 'My Page';
+class KStringPopularList {
+  static const String title = '인기 대여 목록';
 }
