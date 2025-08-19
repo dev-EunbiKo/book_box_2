@@ -1,0 +1,10 @@
+{
+    "editor.hover.above": true,
+    "editor.hover.enabled": true,
+    "editor.hover.delay": 3000,
+    "editor.hover.sticky": true,
+    "editor.colorDecoratorsActivatedOn": "click",
+    "editor.inlineSuggest.showToolbar": "onHover",
+    "workbench.tree.renderIndentGuides": "onHover",
+    "workbench.view.alwaysShowHeaderActions": true
+}
