@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:book_box_2/core/navigation/navigation_service.dart';
 import 'package:book_box_2/core/navigation/routes.dart';
-import 'package:book_box_2/features/main/main_home/presentation/main_page.dart';
+import 'package:book_box_2/features/main/popular_loan_list/presentation/popular_loan_list_page.dart';
 import 'package:book_box_2/gen/assets.gen.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
 import 'package:book_box_2/gen/fonts.gen.dart';
