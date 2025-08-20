@@ -6,8 +6,9 @@ import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_l
 abstract class PopularLoanListState {
   final BaseDMSelPopularList? popularLoanData;
   final DioException? error;
+  final String? startDt;
 
-  const PopularLoanListState({this.popularLoanData, this.error});
+  const PopularLoanListState({this.popularLoanData, this.error, this.startDt});
 }
 
 class PopularLoanListLoading extends PopularLoanListState {
@@ -15,7 +16,7 @@ class PopularLoanListLoading extends PopularLoanListState {
 }
 
 class PopularLoanListDone extends PopularLoanListState {
-  PopularLoanListDone() : super();
+  PopularLoanListDone(String? startDt) : super(startDt: startDt);
 }
 
 class PopularLoanListError extends PopularLoanListState {

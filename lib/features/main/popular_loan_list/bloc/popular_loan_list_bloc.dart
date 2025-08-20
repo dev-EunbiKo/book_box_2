@@ -4,6 +4,7 @@ import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_l
 import 'package:book_box_2/data/repository/popular_loan_list_repository.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_event.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PopularLoanListBloc
@@ -14,6 +15,7 @@ class PopularLoanListBloc
 
   bool isLoading = false;
 
+  // TODO: 여길 연도별로 값을 받아오도록 나눠야 하나???
   List<SelPopularListData>? popularLoanList = [];
 
   void _onGetPopularLoanList(
@@ -40,13 +42,14 @@ class PopularLoanListBloc
     );
 
     if (dataState is DataSuccess) {
+      debugPrint('값 >>> $dataState.data?.response');
       final list = dataState.data?.response?.docs;
 
       if (list != null) {
         popularLoanList?.addAll(list);
       }
 
-      emit(PopularLoanListDone());
+      emit(PopularLoanListDone(event.param.startDt));
       return;
     } else if (dataState is DataFailed) {
       emit(PopularLoanListError(dataState.error));

@@ -3,6 +3,7 @@ import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
 import 'package:book_box_2/core/component/button/scroll_to_top_floating_button.dart';
 import 'package:book_box_2/core/component/custom_view/loading_view.dart';
+import 'package:book_box_2/core/extensions/extension_datetime.dart';
 import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_loan_list_data_model.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_bloc.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_event.dart';
@@ -24,17 +25,41 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final ScrollController scrollController = ScrollController();
+  final now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create:
           (context) =>
-              PopularLoanListBloc()..add(
-                GetPopularLoanList(
-                  PMSelPopularList(startDt: '2025-08-01', endDt: '2025-08-14'),
+              PopularLoanListBloc()
+                ..add(
+                  GetPopularLoanList(
+                    PMSelPopularList(
+                      startDt: now.firstDateOfYear().yyyyMMdd,
+                      endDt: now.lastDateOfYear().yyyyMMdd,
+                    ),
+                  ),
+                )
+                ..add(
+                  GetPopularLoanList(
+                    PMSelPopularList(
+                      startDt:
+                          now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd,
+                      endDt: now.addYearsToDate(-1).lastDateOfYear().yyyyMMdd,
+                    ),
+                  ),
+                )
+                ..add(
+                  GetPopularLoanList(
+                    PMSelPopularList(
+                      startDt:
+                          now.addYearsToDate(-2).firstDateOfYear().yyyyMMdd,
+                      endDt: now.addYearsToDate(-2).lastDateOfYear().yyyyMMdd,
+                    ),
+                  ),
                 ),
-              ),
+
       child: Container(
         color: BookBoxColor.cwhite,
         child: SafeArea(
@@ -62,9 +87,22 @@ class _MainPageState extends State<MainPage> {
                     ),
                     labelColor: BookBoxColor.c161616,
                     tabs: [
-                      SizedBox(height: 36.w, child: const Tab(text: '2025')),
-                      SizedBox(height: 36.w, child: const Tab(text: '2024')),
-                      SizedBox(height: 36.w, child: const Tab(text: '2023')),
+                      SizedBox(
+                        height: 36.w,
+                        child: Tab(text: now.year.toString()),
+                      ),
+                      SizedBox(
+                        height: 36.w,
+                        child: Tab(
+                          text: now.addYearsToDate(-1).year.toString(),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 36.w,
+                        child: Tab(
+                          text: now.addYearsToDate(-2).year.toString(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -74,13 +112,15 @@ class _MainPageState extends State<MainPage> {
                 builder: (BuildContext context, PopularLoanListState state) {
                   final tabController = DefaultTabController.of(context);
                   final contextRead = context.read<PopularLoanListBloc>();
-                  // TODO: 여기서부터 구현!!
+
                   if (state is PopularLoanListDone) {
                     return TabBarView(
                       children: [
                         BlocBuilder<PopularLoanListBloc, PopularLoanListState>(
-                          // TODO: state에 tab에 해당하는 연도가 있어야 함
-                          // buildWhen: (previous, current) => current.,
+                          buildWhen:
+                              (previous, current) =>
+                                  current.startDt ==
+                                  now.firstDateOfYear().yyyyMMdd,
                           builder: (
                             BuildContext context,
                             PopularLoanListState state,
@@ -95,8 +135,13 @@ class _MainPageState extends State<MainPage> {
                         ),
 
                         BlocBuilder<PopularLoanListBloc, PopularLoanListState>(
-                          // TODO: state에 tab에 해당하는 연도가 있어야 함
-                          // buildWhen: (previous, current) => current.,
+                          buildWhen:
+                              (previous, current) =>
+                                  current.startDt ==
+                                  now
+                                      .addYearsToDate(-1)
+                                      .firstDateOfYear()
+                                      .yyyyMMdd,
                           builder: (
                             BuildContext context,
                             PopularLoanListState state,
@@ -111,8 +156,13 @@ class _MainPageState extends State<MainPage> {
                         ),
 
                         BlocBuilder<PopularLoanListBloc, PopularLoanListState>(
-                          // TODO: state에 tab에 해당하는 연도가 있어야 함
-                          // buildWhen: (previous, current) => current.,
+                          buildWhen:
+                              (previous, current) =>
+                                  current.startDt ==
+                                  now
+                                      .addYearsToDate(-2)
+                                      .firstDateOfYear()
+                                      .yyyyMMdd,
                           builder: (
                             BuildContext context,
                             PopularLoanListState state,
@@ -162,6 +212,23 @@ class _MainPageState extends State<MainPage> {
       });
 
       return RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 2));
+
+          if (tabController.index == 0) {
+            bloc.popularLoanList = [];
+          }
+
+          bloc.add(
+            GetPopularLoanList(
+              PMSelPopularList(
+                // TODO: 이 부분을 분기쳐야 하나?
+                startDt: now.firstDateOfYear().yyyyMMdd,
+                endDt: now.lastDateOfYear().yyyyMMdd,
+              ),
+            ),
+          );
+        },
         child: ScrollToTopFloatingButton(
           scrollController: scrollController,
           child: ListView.builder(
@@ -187,19 +254,6 @@ class _MainPageState extends State<MainPage> {
             },
           ),
         ),
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 2));
-
-          if (tabController.index == 0) {
-            bloc.popularLoanList = [];
-          }
-
-          bloc.add(
-            GetPopularLoanList(
-              PMSelPopularList(startDt: '2025-01-01', endDt: '2025-08-15'),
-            ),
-          );
-        },
       );
     } else {
       // TODO: 데이터 없을 때의 emptyView 만들기
@@ -212,16 +266,16 @@ class _MainPageState extends State<MainPage> {
         PMSelPopularList(
           startDt:
               tabController.index == 0
-                  ? '2025-01-01'
+                  ? now.firstDateOfYear().yyyyMMdd
                   : tabController.index == 1
-                  ? '2024-01-01'
-                  : '2023-01-01',
+                  ? now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd
+                  : now.addYearsToDate(-2).firstDateOfYear().yyyyMMdd,
           endDt:
               tabController.index == 0
-                  ? '2025-08-17'
+                  ? now.lastDateOfYear().yyyyMMdd
                   : tabController.index == 1
-                  ? '2024-12-31'
-                  : '2023-12-31',
+                  ? now.addYearsToDate(-1).lastDateOfYear().yyyyMMdd
+                  : now.addYearsToDate(-2).lastDateOfYear().yyyyMMdd,
         ),
       ),
     );
