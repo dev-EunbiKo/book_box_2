@@ -19,6 +19,7 @@ dependencies:
   retrofit: ^4.6.0
   json_serializable: ^6.9.0
   dio: ^5.9.0
+  intl: ^0.20.2
   
 dev_dependencies:
   flutter_test:
