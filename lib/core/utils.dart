@@ -4,8 +4,4 @@ class Utils {
   static Utils getInstance() {
     return const Utils._();
   }
-
-  // String formatFirstDateFromMonth(String inputDate) {
-
-  // }
 }
