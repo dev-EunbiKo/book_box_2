@@ -22,38 +22,58 @@ class PopularLoanButtonCell extends StatelessWidget {
         // TODO: 페이지 렌딩 구현
       },
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 22.w,
-            child: AspectRatio(
-              aspectRatio: 1 / 2,
-              child: SvgPicture.asset(
-                data?.item?.bookImageURL ?? '',
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-
-          Column(
+          Stack(
+            alignment: Alignment.bottomCenter,
             children: [
-              Text(
-                data?.item?.bookname ?? '',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: BookBoxColor.c283a7d,
-                  fontFamily: BookBoxFontFamily.pretendardMedium,
+              SizedBox(
+                width: 33.w,
+                child: AspectRatio(
+                  aspectRatio: 2 / 3,
+                  // TODO: 캐시 이미지 구현
+                  child: SvgPicture.asset(
+                    data?.item?.bookImageURL ??
+                        BookBoxAssets.images.placeholder.path,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              Text(
-                data?.item?.authors ?? '',
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  color: BookBoxColor.c00000000,
-                  fontFamily: BookBoxFontFamily.pretendardLight,
+
+              Positioned(
+                child: Text(
+                  data?.item?.loanCount ?? '',
+                  style: TextStyle(
+                    fontFamily: BookBoxFontFamily.pretendardRegular,
+                    fontSize: 9.sp,
+                    color: BookBoxColor.c202020,
+                  ),
                 ),
               ),
             ],
+          ),
+          SizedBox(width: 11.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  data?.item?.bookname ?? '',
+                  style: TextStyle(
+                    fontFamily: BookBoxFontFamily.pretendardBold,
+                    fontSize: 14.sp,
+                    color: BookBoxColor.c283a7d,
+                  ),
+                ),
+                Text(
+                  data?.item?.authors ?? '',
+                  style: TextStyle(
+                    fontFamily: BookBoxFontFamily.pretendardRegular,
+                    fontSize: 10.sp,
+                    color: BookBoxColor.c202020,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
