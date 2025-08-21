@@ -6,4 +6,14 @@ class KStringNaviBar {
 
 class KStringPopularList {
   static const String title = '인기 대여 목록';
+  static const String empty = '목록이 존재하지 않습니다.';
+}
+
+class KStringError {
+  static const String rs001 = '정상 처리되었습니다.';
+  static const String rs002 = '요청 처리에 실패하였습니다.';
+  static const String rs003 = '인증 정보가 유효하지 않습니다.';
+  static const String rs004 = '필수 인자가 전달되지 않았습니다.';
+  static const String rs005 = '서버 상태가 비정상입니다.';
+  static const String noData = '데이터가 없습니다.';
 }
