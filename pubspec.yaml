@@ -20,6 +20,8 @@ dependencies:
   json_serializable: ^6.9.0
   dio: ^5.9.0
   intl: ^0.20.2
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
   
 dev_dependencies:
   flutter_test:
