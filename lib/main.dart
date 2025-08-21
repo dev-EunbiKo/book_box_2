@@ -19,10 +19,10 @@ class _MyAppState extends State<MyApp> {
       designSize: Size(360, 690),
       builder: (BuildContext context, Widget? _) {
         return MaterialApp(
+          navigatorKey: NavigationService.navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(colorSchemeSeed: Colors.pinkAccent),
           routes: Routes.routes,
-          navigatorKey: NavigationService.navigatorKey,
           onGenerateInitialRoutes: (String initialRouteName) {
             return [
               MaterialPageRoute(

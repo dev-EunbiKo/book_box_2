@@ -1,8 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:ui';
-
-import 'package:book_box_2/core/navigation/navigation_service.dart';
-import 'package:book_box_2/core/navigation/routes.dart';
 import 'package:book_box_2/features/main/popular_loan_list/presentation/popular_loan_list_page.dart';
 import 'package:book_box_2/gen/assets.gen.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
@@ -25,12 +20,17 @@ class NavigationState extends State<Navigation> {
   static final naviKey = GlobalKey();
   late int selectedIndex;
 
-  final List<Widget> _pages = [const MainPage(), Container()];
+  final List<Widget> _pages = [const MainPage(), Container(), Container()];
 
   @override
   void initState() {
     super.initState();
     selectedIndex = widget.selectedIndex;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -63,6 +63,31 @@ class NavigationState extends State<Navigation> {
             topRight: Radius.circular(12),
           ),
           child: BottomNavigationBar(
+            key: naviKey,
+            elevation: 0,
+            backgroundColor: Colors.white,
+            currentIndex: selectedIndex,
+            onTap: (int index) {
+              // TODO: 추후 분기 쳐야 함
+              // _pages.removeAt(index);
+              // _pages.insert(index, MainPage(key: naviKey));
+
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: true,
+            unselectedItemColor: BookBoxColor.cb7b7b9,
+            unselectedFontSize: 12.sp,
+            unselectedLabelStyle: TextStyle(
+              fontFamily: BookBoxFontFamily.pretendardRegular,
+            ),
+            selectedItemColor: BookBoxColor.c283a7d,
+            selectedFontSize: 12.sp,
+            selectedLabelStyle: TextStyle(
+              fontFamily: BookBoxFontFamily.pretendardBold,
+            ),
             items: [
               _naviBarItem(
                 label: KStringNaviBar.home,
@@ -81,32 +106,6 @@ class NavigationState extends State<Navigation> {
                     BookBoxAssets.images.tabbar.naviMypageSel.path,
               ),
             ],
-            onTap: (int index) {
-              if (index == 0) {
-                return;
-              } else {
-                NavigationService.push(Routes.main);
-              }
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            key: naviKey,
-            elevation: 0,
-            backgroundColor: Colors.white,
-            currentIndex: selectedIndex,
-            type: BottomNavigationBarType.fixed,
-            showUnselectedLabels: true,
-            unselectedItemColor: Theme.of(context).unselectedWidgetColor,
-            unselectedFontSize: 12.sp,
-            unselectedLabelStyle: TextStyle(
-              fontFamily: BookBoxFontFamily.pretendardRegular,
-            ),
-            selectedItemColor: Theme.of(context).highlightColor,
-            selectedFontSize: 12.sp,
-            selectedLabelStyle: TextStyle(
-              fontFamily: BookBoxFontFamily.pretendardBold,
-            ),
           ),
         ),
       ),
