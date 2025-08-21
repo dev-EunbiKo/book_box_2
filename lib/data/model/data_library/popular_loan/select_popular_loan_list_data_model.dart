@@ -11,7 +11,7 @@ class PMSelPopularList {
     required this.startDt,
     required this.endDt,
     this.addCode = '0;1;2;4;9',
-    this.pageNo = 1,
+    required this.pageNo,
     this.pageSize = 15,
   });
 

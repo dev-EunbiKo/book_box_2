@@ -3,6 +3,8 @@ import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
 import 'package:book_box_2/core/component/button/scroll_to_top_floating_button.dart';
 import 'package:book_box_2/core/component/custom_view/loading_view.dart';
+import 'package:book_box_2/core/component/custom_view/no_data_placeholder.dart';
+import 'package:book_box_2/core/component/custom_view/placeholder.dart';
 import 'package:book_box_2/core/extensions/extension_datetime.dart';
 import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_loan_list_data_model.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_bloc.dart';
@@ -15,6 +17,7 @@ import 'package:book_box_2/resources/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -24,39 +27,55 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final ScrollController scrollController = ScrollController();
+  final ScrollController firstSC = ScrollController();
+  final ScrollController secondSC = ScrollController();
+  final ScrollController thirdSC = ScrollController();
   final now = DateTime.now();
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   firstSC.dispose();
+  //   secondSC.dispose();
+  //   thirdSC.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<PopularLoanListBloc>(
       create:
           (context) =>
               PopularLoanListBloc()
                 ..add(
                   GetPopularLoanList(
                     PMSelPopularList(
+                      pageNo: 1,
                       startDt: now.firstDateOfYear().yyyyMMdd,
                       endDt: now.lastDateOfYear().yyyyMMdd,
                     ),
+                    false,
                   ),
                 )
                 ..add(
                   GetPopularLoanList(
                     PMSelPopularList(
+                      pageNo: 1,
                       startDt:
                           now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd,
                       endDt: now.addYearsToDate(-1).lastDateOfYear().yyyyMMdd,
                     ),
+                    false,
                   ),
                 )
                 ..add(
                   GetPopularLoanList(
                     PMSelPopularList(
+                      pageNo: 1,
                       startDt:
                           now.addYearsToDate(-2).firstDateOfYear().yyyyMMdd,
                       endDt: now.addYearsToDate(-2).lastDateOfYear().yyyyMMdd,
                     ),
+                    false,
                   ),
                 ),
 
@@ -110,10 +129,11 @@ class _MainPageState extends State<MainPage> {
 
               body: BlocBuilder<PopularLoanListBloc, PopularLoanListState>(
                 builder: (BuildContext context, PopularLoanListState state) {
-                  final tabController = DefaultTabController.of(context);
+                  final tc = DefaultTabController.of(context);
                   final contextRead = context.read<PopularLoanListBloc>();
 
                   if (state is PopularLoanListDone) {
+                    // api 호출 끝
                     return TabBarView(
                       children: [
                         BlocBuilder<PopularLoanListBloc, PopularLoanListState>(
@@ -126,10 +146,10 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
-                              tabController,
+                              tc,
                               contextRead,
-                              scrollController,
-                              contextRead.popularLoanList,
+                              firstSC,
+                              contextRead.thisYearList,
                             );
                           },
                         ),
@@ -147,10 +167,10 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
-                              tabController,
+                              tc,
                               contextRead,
-                              scrollController,
-                              contextRead.popularLoanList,
+                              secondSC,
+                              contextRead.lastYearList,
                             );
                           },
                         ),
@@ -168,23 +188,51 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
-                              tabController,
+                              tc,
                               contextRead,
-                              scrollController,
-                              contextRead.popularLoanList,
+                              thirdSC,
+                              contextRead.beforeLastYearList,
                             );
                           },
                         ),
                       ],
                     );
                   } else if (state is PopularLoanListLoading) {
-                    // TODO: api 호출 로딩
-                    return Container(color: Colors.black);
+                    // api 호출 로딩 중
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      enabled: true,
+                      child: const SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(height: 16.0),
+                            ContentPlaceholder(
+                              lineType: ContentLineType.threeLines,
+                            ),
+                            SizedBox(height: 16.0),
+                            TitlePlaceholder(width: 200.0),
+                            SizedBox(height: 16.0),
+                            ContentPlaceholder(
+                              lineType: ContentLineType.twoLines,
+                            ),
+                            SizedBox(height: 16.0),
+                            TitlePlaceholder(width: 200.0),
+                            SizedBox(height: 16.0),
+                            ContentPlaceholder(
+                              lineType: ContentLineType.twoLines,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   } else {
                     // api 에러
                     LoadingView.hide();
-                    // TODO: emptyView 만들기
-                    return Container(color: Colors.black);
+                    return NoDataPlaceHolder(title: KStringError.noData);
                   }
                 },
               ),
@@ -196,18 +244,20 @@ class _MainPageState extends State<MainPage> {
   }
 
   _listViewBuilderCell(
-    TabController tabController,
+    TabController tc,
     PopularLoanListBloc bloc,
-    ScrollController scrollController,
+    ScrollController sc,
     List<SelPopularListData>? list,
   ) {
     if (list != null && list.isNotEmpty) {
-      scrollController.addListener(() {
+      sc.addListener(() {
         if (!bloc.isLoading &&
-            scrollController.position.pixels >=
-                scrollController.position.maxScrollExtent - 100) {
-          LoadingView.show();
-          _loadNextPage(bloc, tabController);
+            sc.position.pixels >= sc.position.maxScrollExtent - 100) {
+          // TODO: 오류 확인해볼 것!!
+          // LoadingView.show();
+
+          /// 스크롤 끝에서 추가 페이징
+          _loadNextPage(bloc, tc);
         }
       });
 
@@ -215,25 +265,47 @@ class _MainPageState extends State<MainPage> {
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 2));
 
-          if (tabController.index == 0) {
-            bloc.popularLoanList = [];
+          // 당겼을 때 탭 초기화
+          if (tc.index == 0) {
+            bloc.thisYearList = [];
+            bloc.firstTabPage = 1;
+            bloc.firstTabPageEnd = false;
+          } else if (tc.index == 1) {
+            bloc.lastYearList = [];
+            bloc.secondTabPage = 1;
+            bloc.secondTabPageEnd = false;
+          } else {
+            bloc.beforeLastYearList = [];
+            bloc.thirdTabPage = 1;
+            bloc.thirdTabPageEnd = false;
           }
 
           bloc.add(
             GetPopularLoanList(
               PMSelPopularList(
-                // TODO: 이 부분을 분기쳐야 하나?
-                startDt: now.firstDateOfYear().yyyyMMdd,
-                endDt: now.lastDateOfYear().yyyyMMdd,
+                pageNo: 1,
+                startDt:
+                    tc.index == 0
+                        ? now.firstDateOfYear().yyyyMMdd
+                        : tc.index == 1
+                        ? now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd
+                        : now.addYearsToDate(-2).firstDateOfYear().yyyyMMdd,
+                endDt:
+                    tc.index == 0
+                        ? now.lastDateOfYear().yyyyMMdd
+                        : tc.index == 1
+                        ? now.addYearsToDate(-1).lastDateOfYear().yyyyMMdd
+                        : now.addYearsToDate(-2).lastDateOfYear().yyyyMMdd,
               ),
+              false,
             ),
           );
         },
         child: ScrollToTopFloatingButton(
-          scrollController: scrollController,
+          scrollController: sc,
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
-            controller: scrollController,
+            controller: sc,
             padding: EdgeInsets.zero,
             itemCount: list.length,
             itemBuilder: (context, index) {
@@ -242,6 +314,7 @@ class _MainPageState extends State<MainPage> {
 
               bloc.isLoading = false;
               LoadingView.hide();
+
               return Padding(
                 padding: EdgeInsets.only(
                   top: 20.h,
@@ -256,27 +329,34 @@ class _MainPageState extends State<MainPage> {
         ),
       );
     } else {
-      // TODO: 데이터 없을 때의 emptyView 만들기
+      return const NoDataPlaceHolder(title: KStringPopularList.empty);
     }
   }
 
-  _loadNextPage(PopularLoanListBloc bloc, TabController tabController) {
+  _loadNextPage(PopularLoanListBloc bloc, TabController tc) {
     bloc.add(
       GetPopularLoanList(
         PMSelPopularList(
+          pageNo:
+              tc.index == 0
+                  ? bloc.firstTabPage
+                  : tc.index == 1
+                  ? bloc.secondTabPage
+                  : bloc.thirdTabPage,
           startDt:
-              tabController.index == 0
+              tc.index == 0
                   ? now.firstDateOfYear().yyyyMMdd
-                  : tabController.index == 1
+                  : tc.index == 1
                   ? now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd
                   : now.addYearsToDate(-2).firstDateOfYear().yyyyMMdd,
           endDt:
-              tabController.index == 0
+              tc.index == 0
                   ? now.lastDateOfYear().yyyyMMdd
-                  : tabController.index == 1
+                  : tc.index == 1
                   ? now.addYearsToDate(-1).lastDateOfYear().yyyyMMdd
                   : now.addYearsToDate(-2).lastDateOfYear().yyyyMMdd,
         ),
+        true,
       ),
     );
   }

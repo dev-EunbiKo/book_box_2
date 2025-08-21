@@ -6,5 +6,8 @@ abstract class PopularLoanListEvent {
 
 class GetPopularLoanList extends PopularLoanListEvent {
   final PMSelPopularList param;
-  const GetPopularLoanList(this.param);
+  // 페이징을 위한 호출 여부
+  final bool isMore;
+
+  const GetPopularLoanList(this.param, this.isMore);
 }
