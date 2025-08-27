@@ -9,6 +9,12 @@ class KStringPopularList {
   static const String empty = '목록이 존재하지 않습니다.';
 }
 
+class KStringSearch {
+  static const String title = '도서 검색';
+  static const String hintText = '검색어를 입력해주세요.';
+  static const String history = '최근 검색 조건';
+}
+
 class KStringError {
   static const String rs001 = '정상 처리되었습니다.';
   static const String rs002 = '요청 처리에 실패하였습니다.';
