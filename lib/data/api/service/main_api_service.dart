@@ -1,4 +1,5 @@
 import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_loan_list_data_model.dart';
+import 'package:book_box_2/data/model/data_library/search/search_book_list_data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -11,5 +12,10 @@ abstract class MainApiService {
   @GET('/loanItemSrch')
   Future<HttpResponse<BaseDMSelPopularList>> selectPopularLoanList(
     @Queries() PMSelPopularList param,
+  );
+
+  @GET('/srchBooks')
+  Future<HttpResponse<BaseDMSearchList>> searchBookList(
+    @Queries() PMSearchBookList param,
   );
 }
