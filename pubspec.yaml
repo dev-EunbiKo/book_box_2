@@ -22,6 +22,7 @@ dependencies:
   intl: ^0.20.2
   shimmer: ^3.0.0
   cached_network_image: ^3.4.1
+  shared_preferences: ^2.5.3
   
 dev_dependencies:
   flutter_test:
@@ -49,8 +50,6 @@ flutter_gen:
       class_name: BookBoxAssets
       package_parameter_enabled: false
       style: dot-delimiter
-      exclude:
-        - assets/images/splash2.png
 
   colors:
     enabled: true
@@ -90,12 +89,4 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/logo/
     - assets/images/sns/
-    - assets/images/home/
-    - assets/images/alarm/
-    - assets/images/car_list_detail/
-    - assets/images/car_list_detail/car_highlighted_description_icon/
-    - assets/images/car_list_detail/caron_banner_icon/
-    - assets/images/tabbar/
-    - assets/images/car_options_icon/
