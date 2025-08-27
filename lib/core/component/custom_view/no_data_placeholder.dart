@@ -31,7 +31,7 @@ class NoDataPlaceHolder extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1 / 1,
               child: SvgPicture.asset(
-                imgPath ?? BookBoxAssets.images.emptyIcon.path,
+                imgPath ?? BookBoxAssets.images.icErrorFilled.path,
                 fit: BoxFit.contain,
               ),
             ),
@@ -42,7 +42,7 @@ class NoDataPlaceHolder extends StatelessWidget {
             style: TextStyle(
               fontFamily: BookBoxFontFamily.pretendardSemiBold,
               fontSize: 18.sp,
-              color: BookBoxColor.c646467,
+              color: BookBoxColor.grey000,
             ),
             textAlign: TextAlign.center,
           ),
@@ -63,7 +63,7 @@ class NoDataPlaceHolder extends StatelessWidget {
         style: TextStyle(
           fontFamily: BookBoxFontFamily.pretendardSemiBold,
           fontSize: 16.sp,
-          color: BookBoxColor.cb7b7b9,
+          color: BookBoxColor.grey200,
         ),
         textAlign: TextAlign.center,
       ),

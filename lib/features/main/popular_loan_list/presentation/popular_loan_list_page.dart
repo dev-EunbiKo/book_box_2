@@ -2,7 +2,6 @@
 import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
 import 'package:book_box_2/core/component/button/scroll_to_top_floating_button.dart';
-import 'package:book_box_2/core/component/custom_view/loading_view.dart';
 import 'package:book_box_2/core/component/custom_view/no_data_placeholder.dart';
 import 'package:book_box_2/core/component/custom_view/placeholder.dart';
 import 'package:book_box_2/core/extensions/extension_datetime.dart';
@@ -31,14 +30,6 @@ class _MainPageState extends State<MainPage> {
   final ScrollController secondSC = ScrollController();
   final ScrollController thirdSC = ScrollController();
   final now = DateTime.now();
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   firstSC.dispose();
-  //   secondSC.dispose();
-  //   thirdSC.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +71,12 @@ class _MainPageState extends State<MainPage> {
                 ),
 
       child: Container(
-        color: BookBoxColor.cwhite,
+        color: BookBoxColor.white000,
         child: SafeArea(
           child: DefaultTabController(
             length: 3,
             child: Scaffold(
-              backgroundColor: BookBoxColor.cf2f3f5,
+              backgroundColor: BookBoxColor.background,
               // AppBar
               appBar: CommonAppBar(
                 title: KStringPopularList.title,
@@ -99,12 +90,12 @@ class _MainPageState extends State<MainPage> {
                   preferredSize: Size.fromHeight(36.w),
                   child: TabBar(
                     indicatorWeight: 2.w,
-                    indicatorColor: BookBoxColor.c17171c,
+                    indicatorColor: BookBoxColor.black100,
                     labelStyle: TextStyle(
                       fontSize: 14.sp,
                       fontFamily: BookBoxFontFamily.pretendardSemiBold,
                     ),
-                    labelColor: BookBoxColor.c161616,
+                    labelColor: BookBoxColor.black100,
                     tabs: [
                       SizedBox(
                         height: 36.w,
@@ -214,13 +205,17 @@ class _MainPageState extends State<MainPage> {
                               lineType: ContentLineType.threeLines,
                             ),
                             SizedBox(height: 16.0),
-                            TitlePlaceholder(width: 200.0),
+                            ContentPlaceholder(
+                              lineType: ContentLineType.twoLines,
+                            ),
                             SizedBox(height: 16.0),
                             ContentPlaceholder(
                               lineType: ContentLineType.twoLines,
                             ),
                             SizedBox(height: 16.0),
-                            TitlePlaceholder(width: 200.0),
+                            ContentPlaceholder(
+                              lineType: ContentLineType.twoLines,
+                            ),
                             SizedBox(height: 16.0),
                             ContentPlaceholder(
                               lineType: ContentLineType.twoLines,
@@ -231,7 +226,8 @@ class _MainPageState extends State<MainPage> {
                     );
                   } else {
                     // api 에러
-                    LoadingView.hide();
+                    // TODO: 로딩뷰 바꾸기
+                    // LoadingView.hide();
                     return NoDataPlaceHolder(title: KStringError.noData);
                   }
                 },
@@ -253,8 +249,9 @@ class _MainPageState extends State<MainPage> {
       sc.addListener(() {
         if (!bloc.isLoading &&
             sc.position.pixels >= sc.position.maxScrollExtent - 100) {
-          // TODO: 오류 확인해볼 것!!
+          // TODO: 오류 발생!! -> 로딩뷰 없애기
           // LoadingView.show();
+          CircularProgressIndicator();
 
           /// 스크롤 끝에서 추가 페이징
           _loadNextPage(bloc, tc);
@@ -312,8 +309,10 @@ class _MainPageState extends State<MainPage> {
               final data = list[index];
               double verticalPadding = index == list.length - 1 ? 20.0 : 0.0;
 
+              // api 로딩 끝, 연속 스크롤로 추가 페이징 방지
               bloc.isLoading = false;
-              LoadingView.hide();
+              // TODO: 오류 발생!! -> 로딩뷰 없애기
+              // LoadingView.hide();
 
               return Padding(
                 padding: EdgeInsets.only(

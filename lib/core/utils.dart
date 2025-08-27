@@ -45,11 +45,9 @@ class Utils {
   /// imageURlLoading placeholder
   Widget _imagePlaceHolder(double? width, double? height, bool isBgWhite) {
     return Container(
-      color: isBgWhite ? BookBoxColor.cwhite : BookBoxColor.ce8e8e8,
+      color: isBgWhite ? BookBoxColor.white000 : BookBoxColor.white100,
       child: SvgPicture.asset(
-        isBgWhite
-            ? BookBoxAssets.images.placeholderWhite.path
-            : BookBoxAssets.images.placeholder.path,
+        BookBoxAssets.images.icError.path,
         width: width,
         height: height,
         fit: BoxFit.contain,

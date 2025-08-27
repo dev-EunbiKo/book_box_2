@@ -26,14 +26,14 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: BookBoxColor.cwhite,
-      shadowColor: BookBoxColor.cefefef,
+      backgroundColor: BookBoxColor.white000,
+      shadowColor: BookBoxColor.grey300,
       elevation: showUnderLine ? 0.5 : 0,
       automaticallyImplyLeading: btnLeft == null ? false : true,
       title: Text(
         title,
         style: TextStyle(
-          color: BookBoxColor.c17171c,
+          color: BookBoxColor.grey100,
           fontSize: 18.sp,
           fontFamily: BookBoxFontFamily.pretendardBold,
         ),

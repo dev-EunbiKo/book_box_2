@@ -15,7 +15,7 @@ class PopularLoanButtonCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashFactory: NoSplash.splashFactory,
-      highlightColor: BookBoxColor.c00000000,
+      highlightColor: BookBoxColor.black000,
       onTap: () {
         // TODO: 페이지 렌딩 구현
       },
@@ -26,7 +26,7 @@ class PopularLoanButtonCell extends StatelessWidget {
             style: TextStyle(
               fontFamily: BookBoxFontFamily.pretendardMedium,
               fontSize: 14.sp,
-              color: BookBoxColor.c283a7d,
+              color: BookBoxColor.indigo000,
             ),
           ),
           SizedBox(width: 11.w),
@@ -50,7 +50,7 @@ class PopularLoanButtonCell extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: BookBoxFontFamily.pretendardRegular,
                     fontSize: 9.sp,
-                    color: BookBoxColor.c202020,
+                    color: BookBoxColor.black100,
                   ),
                 ),
               ),
@@ -66,7 +66,7 @@ class PopularLoanButtonCell extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: BookBoxFontFamily.pretendardBold,
                     fontSize: 14.sp,
-                    color: BookBoxColor.c283a7d,
+                    color: BookBoxColor.indigo000,
                   ),
                 ),
                 Text(
@@ -74,7 +74,7 @@ class PopularLoanButtonCell extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: BookBoxFontFamily.pretendardRegular,
                     fontSize: 10.sp,
-                    color: BookBoxColor.c202020,
+                    color: BookBoxColor.black100,
                   ),
                 ),
               ],

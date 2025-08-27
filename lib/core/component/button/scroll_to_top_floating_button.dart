@@ -117,7 +117,7 @@ class _ScrollToTopFloatingButtonState extends State<ScrollToTopFloatingButton>
                 child: AspectRatio(
                   aspectRatio: 1 / 1,
                   child: SvgPicture.asset(
-                    BookBoxAssets.images.arrowUpward.path,
+                    BookBoxAssets.images.icArrowUpward.path,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -20,7 +20,7 @@ class CommonAppBarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashFactory: NoSplash.splashFactory,
-      highlightColor: BookBoxColor.c00000000,
+      highlightColor: BookBoxColor.black000,
       onTap: () {
         onPressed();
       },
@@ -36,17 +36,17 @@ class CommonAppBarButton extends StatelessWidget {
   _getButtonTypeIcon(CommonAppBarButtonType type) {
     switch (type) {
       case CommonAppBarButtonType.back:
-        _setButtonIcon(BookBoxAssets.images.icArrowBack.path);
+        _setButtonIcon(BookBoxAssets.images.icArrowLeft.path);
       case CommonAppBarButtonType.close:
         _setButtonIcon(BookBoxAssets.images.icClose.path);
       case CommonAppBarButtonType.share:
         _setButtonIcon(BookBoxAssets.images.icShare.path);
       case CommonAppBarButtonType.search:
-        _setButtonIcon(BookBoxAssets.images.tabbar.naviSearch.path);
+        _setButtonIcon(BookBoxAssets.images.icSearch.path);
       case CommonAppBarButtonType.plus:
         _setButtonIcon(BookBoxAssets.images.icAdd.path);
       default:
-        _setButtonIcon(BookBoxAssets.images.icArrowBack.path);
+        _setButtonIcon(BookBoxAssets.images.icArrowLeft.path);
     }
   }
 
