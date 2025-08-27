@@ -251,7 +251,6 @@ class _MainPageState extends State<MainPage> {
             sc.position.pixels >= sc.position.maxScrollExtent - 100) {
           // TODO: 오류 발생!! -> 로딩뷰 없애기
           // LoadingView.show();
-          CircularProgressIndicator();
 
           /// 스크롤 끝에서 추가 페이징
           _loadNextPage(bloc, tc);

@@ -1,4 +1,3 @@
-import 'package:book_box_2/core/component/custom_view/loading_view.dart';
 import 'package:book_box_2/core/extensions/extension_datetime.dart';
 import 'package:book_box_2/data/data_state.dart';
 import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_loan_list_data_model.dart';
@@ -35,9 +34,10 @@ class PopularLoanListBloc
     Emitter<PopularLoanListState> emit,
   ) async {
     final isEnd =
-        event.param.startDt == now.year.toString()
+        event.param.startDt == now.firstDateOfYear().yyyyMMdd
             ? firstTabPageEnd
-            : event.param.startDt == now.addYearsToDate(-1).year.toString()
+            : event.param.startDt ==
+                now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd
             ? secondTabPageEnd
             : thirdTabPageEnd;
     if (!isEnd && (!event.isMore || !isLoading)) {
@@ -45,7 +45,8 @@ class PopularLoanListBloc
       isLoading = !isLoading ? true : isLoading;
       await _apiCall(event, emit);
     } else {
-      LoadingView.hide();
+      // TODO: circularprogressbar로 바꿀 것
+      // LoadingView.hide();
       return;
     }
   }
@@ -82,7 +83,7 @@ class PopularLoanListBloc
                   now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd
               ? secondTabPage++
               : thirdTabPage++;
-          event.param.startDt == now.year.toString()
+          event.param.startDt == now.firstDateOfYear().yyyyMMdd
               ? firstTabPageEnd = false
               : event.param.startDt ==
                   now.addYearsToDate(-1).firstDateOfYear().yyyyMMdd

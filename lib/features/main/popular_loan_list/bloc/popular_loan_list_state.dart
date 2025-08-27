@@ -11,14 +11,17 @@ abstract class PopularLoanListState {
   const PopularLoanListState({this.popularLoanData, this.error, this.startDt});
 }
 
+/// 로딩
 class PopularLoanListLoading extends PopularLoanListState {
   const PopularLoanListLoading() : super();
 }
 
+/// 리스트 조회 끝
 class PopularLoanListDone extends PopularLoanListState {
   PopularLoanListDone(String? startDt) : super(startDt: startDt);
 }
 
+/// 리스트 조회 중 에러
 class PopularLoanListError extends PopularLoanListState {
   const PopularLoanListError(DioException? error) : super(error: error);
 }
