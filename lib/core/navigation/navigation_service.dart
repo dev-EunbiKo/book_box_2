@@ -1,6 +1,6 @@
 import 'package:book_box_2/core/extensions/extension_object.dart';
 import 'package:book_box_2/core/navigation/routes.dart';
-import 'package:book_box_2/navigation.dart';
+import 'package:book_box_2/main_navigation_page.dart';
 import 'package:flutter/material.dart';
 
 enum AnimationDirection {
@@ -41,13 +41,12 @@ class NavigationService {
 
     if (routeName == Routes.navigation &&
         tabIndex != null &&
-        (NavigationState.naviKey.currentWidget) != null) {
+        (MainNavigationPageState.naviKey.currentWidget) != null) {
       navigatorKey.currentContext?.ifNotNull(
         (buildContext) => {
           Navigator.of(buildContext).popUntil((route) => route.isFirst),
-          (NavigationState.naviKey.currentWidget as BottomNavigationBar).onTap!(
-            tabIndex,
-          ),
+          (MainNavigationPageState.naviKey.currentWidget as BottomNavigationBar)
+              .onTap!(tabIndex),
         },
       );
     } else {
@@ -59,7 +58,7 @@ class NavigationService {
                   builder:
                       (_) =>
                           (routeName == Routes.navigation && tabIndex != null)
-                              ? Navigation(selectedIndex: tabIndex)
+                              ? MainNavigationPage(selectedIndex: tabIndex)
                               : Routes.routes[routeName]!(buildContext),
                 )
                 : _createRoute(routeName, direction),

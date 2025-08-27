@@ -1,5 +1,5 @@
 import 'package:book_box_2/features/main/popular_loan_list/presentation/popular_loan_list_page.dart';
-import 'package:book_box_2/navigation.dart';
+import 'package:book_box_2/main_navigation_page.dart';
 import 'package:flutter/cupertino.dart';
 
 /// 화면에 대한 설정 정보
@@ -15,7 +15,7 @@ class Routes {
   static final routes = <String, WidgetBuilder>{
     navigation: (BuildContext context) {
       final args = ModalRoute.of(context)!.settings.arguments as int?;
-      return Navigation(selectedIndex: args ?? 0);
+      return MainNavigationPage(selectedIndex: args ?? 0);
     },
 
     main: (BuildContext context) => const MainPage(),

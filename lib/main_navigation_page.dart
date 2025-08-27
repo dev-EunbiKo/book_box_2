@@ -1,4 +1,5 @@
 import 'package:book_box_2/features/main/popular_loan_list/presentation/popular_loan_list_page.dart';
+import 'package:book_box_2/features/main/search/presentation/search_page.dart';
 import 'package:book_box_2/gen/assets.gen.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
 import 'package:book_box_2/gen/fonts.gen.dart';
@@ -7,25 +8,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Navigation extends StatefulWidget {
+class MainNavigationPage extends StatefulWidget {
   final int selectedIndex;
 
-  const Navigation({super.key, required this.selectedIndex});
+  const MainNavigationPage({super.key, required this.selectedIndex});
 
   @override
-  State<Navigation> createState() => NavigationState();
+  State<MainNavigationPage> createState() => MainNavigationPageState();
 }
 
-class NavigationState extends State<Navigation> {
+class MainNavigationPageState extends State<MainNavigationPage> {
   static final naviKey = GlobalKey();
-  late int selectedIndex;
+  late int _selectedIndex;
 
-  final List<Widget> _pages = [const MainPage(), Container(), Container()];
+  final List<Widget> _pages = [
+    const MainPage(),
+    SearchPage(),
+    Container(color: BookBoxColor.background),
+  ];
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.selectedIndex;
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -37,10 +42,7 @@ class NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: Center(
-        // TODO: 위아래 틀 제외한 페이지 넣기
-        child: _pages[selectedIndex],
-      ),
+      body: Center(child: _pages[_selectedIndex]),
       bottomNavigationBar: Container(
         height: 88.h,
         decoration: BoxDecoration(
@@ -66,44 +68,40 @@ class NavigationState extends State<Navigation> {
             key: naviKey,
             elevation: 0,
             backgroundColor: Colors.white,
-            currentIndex: selectedIndex,
+            currentIndex: _selectedIndex,
             onTap: (int index) {
-              // TODO: 추후 분기 쳐야 함
-              // _pages.removeAt(index);
-              // _pages.insert(index, MainPage(key: naviKey));
-
               setState(() {
-                selectedIndex = index;
+                _selectedIndex = index;
               });
             },
+
             type: BottomNavigationBarType.fixed,
             showUnselectedLabels: true,
-            unselectedItemColor: BookBoxColor.cb7b7b9,
-            unselectedFontSize: 12.sp,
+            unselectedItemColor: BookBoxColor.grey300,
+            unselectedFontSize: 11.sp,
             unselectedLabelStyle: TextStyle(
               fontFamily: BookBoxFontFamily.pretendardRegular,
             ),
-            selectedItemColor: BookBoxColor.c283a7d,
-            selectedFontSize: 12.sp,
+            selectedItemColor: BookBoxColor.indigo000,
+            selectedFontSize: 11.sp,
             selectedLabelStyle: TextStyle(
               fontFamily: BookBoxFontFamily.pretendardBold,
             ),
             items: [
               _naviBarItem(
                 label: KStringNaviBar.home,
-                imagePath: BookBoxAssets.images.tabbar.naviHome.path,
-                selectedImagePath: BookBoxAssets.images.tabbar.naviHomeSel.path,
+                imagePath: BookBoxAssets.images.icHome.path,
+                selectedImagePath: BookBoxAssets.images.icHomeFilled.path,
               ),
               _naviBarItem(
                 label: KStringNaviBar.search,
-                imagePath: BookBoxAssets.images.tabbar.naviSearch.path,
-                selectedImagePath: BookBoxAssets.images.tabbar.naviSearch.path,
+                imagePath: BookBoxAssets.images.icSearch.path,
+                selectedImagePath: BookBoxAssets.images.icSearch.path,
               ),
               _naviBarItem(
                 label: KStringNaviBar.myPage,
-                imagePath: BookBoxAssets.images.tabbar.naviMypage.path,
-                selectedImagePath:
-                    BookBoxAssets.images.tabbar.naviMypageSel.path,
+                imagePath: BookBoxAssets.images.icMypage.path,
+                selectedImagePath: BookBoxAssets.images.icMypageFilled.path,
               ),
             ],
           ),
@@ -121,18 +119,21 @@ class NavigationState extends State<Navigation> {
       label: label,
       icon: SvgPicture.asset(
         imagePath,
-        width: 28.w,
-        height: 28.h,
+        width: 0.06.sw,
+        height: 0.06.sw,
         fit: BoxFit.cover,
       ),
       activeIcon: SvgPicture.asset(
         selectedImagePath,
-        width: 28.w,
-        height: 28.h,
+        width: 0.06.sw,
+        height: 0.06.sw,
         fit: BoxFit.cover,
         colorFilter:
             imagePath == selectedImagePath
-                ? const ColorFilter.mode(BookBoxColor.c283a7d, BlendMode.srcIn)
+                ? const ColorFilter.mode(
+                  BookBoxColor.indigo000,
+                  BlendMode.srcIn,
+                )
                 : null,
       ),
     );
