@@ -2,6 +2,7 @@
 import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
 import 'package:book_box_2/core/component/button/scroll_to_top_floating_button.dart';
+import 'package:book_box_2/core/component/custom_view/loading_view.dart';
 import 'package:book_box_2/core/component/custom_view/no_data_placeholder.dart';
 import 'package:book_box_2/core/component/custom_view/placeholder.dart';
 import 'package:book_box_2/core/extensions/extension_datetime.dart';
@@ -137,8 +138,9 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
+                              context,
                               tc,
-                              contextRead,
+
                               firstSC,
                               contextRead.thisYearList,
                             );
@@ -158,8 +160,9 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
+                              context,
                               tc,
-                              contextRead,
+
                               secondSC,
                               contextRead.lastYearList,
                             );
@@ -179,8 +182,9 @@ class _MainPageState extends State<MainPage> {
                             PopularLoanListState state,
                           ) {
                             return _listViewBuilderCell(
+                              context,
                               tc,
-                              contextRead,
+
                               thirdSC,
                               contextRead.beforeLastYearList,
                             );
@@ -226,8 +230,7 @@ class _MainPageState extends State<MainPage> {
                     );
                   } else {
                     // api 에러
-                    // TODO: 로딩뷰 바꾸기
-                    // LoadingView.hide();
+                    LoadingView.hide();
                     return NoDataPlaceHolder(title: KStringError.noData);
                   }
                 },
@@ -240,20 +243,21 @@ class _MainPageState extends State<MainPage> {
   }
 
   _listViewBuilderCell(
+    BuildContext context,
     TabController tc,
-    PopularLoanListBloc bloc,
     ScrollController sc,
     List<SelPopularListData>? list,
   ) {
+    final contextRead = context.read<PopularLoanListBloc>();
+
     if (list != null && list.isNotEmpty) {
       sc.addListener(() {
-        if (!bloc.isLoading &&
+        if (!contextRead.isLoading &&
             sc.position.pixels >= sc.position.maxScrollExtent - 100) {
-          // TODO: 오류 발생!! -> 로딩뷰 없애기
-          // LoadingView.show();
+          LoadingView.show(context);
 
           /// 스크롤 끝에서 추가 페이징
-          _loadNextPage(bloc, tc);
+          _loadNextPage(contextRead, tc);
         }
       });
 
@@ -263,20 +267,20 @@ class _MainPageState extends State<MainPage> {
 
           // 당겼을 때 탭 초기화
           if (tc.index == 0) {
-            bloc.thisYearList = [];
-            bloc.firstTabPage = 1;
-            bloc.firstTabPageEnd = false;
+            contextRead.thisYearList = [];
+            contextRead.firstTabPage = 1;
+            contextRead.firstTabPageEnd = false;
           } else if (tc.index == 1) {
-            bloc.lastYearList = [];
-            bloc.secondTabPage = 1;
-            bloc.secondTabPageEnd = false;
+            contextRead.lastYearList = [];
+            contextRead.secondTabPage = 1;
+            contextRead.secondTabPageEnd = false;
           } else {
-            bloc.beforeLastYearList = [];
-            bloc.thirdTabPage = 1;
-            bloc.thirdTabPageEnd = false;
+            contextRead.beforeLastYearList = [];
+            contextRead.thirdTabPage = 1;
+            contextRead.thirdTabPageEnd = false;
           }
 
-          bloc.add(
+          contextRead.add(
             GetPopularLoanList(
               PMSelPopularList(
                 pageNo: 1,
@@ -309,9 +313,8 @@ class _MainPageState extends State<MainPage> {
               double verticalPadding = index == list.length - 1 ? 20.0 : 0.0;
 
               // api 로딩 끝, 연속 스크롤로 추가 페이징 방지
-              bloc.isLoading = false;
-              // TODO: 오류 발생!! -> 로딩뷰 없애기
-              // LoadingView.hide();
+              contextRead.isLoading = false;
+              LoadingView.hide();
 
               return Padding(
                 padding: EdgeInsets.only(

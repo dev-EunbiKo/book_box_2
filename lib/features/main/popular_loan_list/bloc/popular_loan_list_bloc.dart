@@ -45,8 +45,6 @@ class PopularLoanListBloc
       isLoading = !isLoading ? true : isLoading;
       await _apiCall(event, emit);
     } else {
-      // TODO: circularprogressbar로 바꿀 것
-      // LoadingView.hide();
       return;
     }
   }
