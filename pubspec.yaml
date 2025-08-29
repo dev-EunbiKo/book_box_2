@@ -17,7 +17,7 @@ dependencies:
   flutter_svg: ^2.2.0
   flutter_bloc: ^9.1.1
   retrofit: ^4.6.0
-  json_serializable: ^6.9.0
+  json_serializable: ^6.8.0
   dio: ^5.9.0
   intl: ^0.20.2
   shimmer: ^3.0.0
