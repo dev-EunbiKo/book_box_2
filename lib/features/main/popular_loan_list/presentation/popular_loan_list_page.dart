@@ -10,7 +10,7 @@ import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_l
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_bloc.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_event.dart';
 import 'package:book_box_2/features/main/popular_loan_list/bloc/popular_loan_list_state.dart';
-import 'package:book_box_2/features/main/popular_loan_list/presentation/widgets/popular_loan_button_cell.dart';
+import 'package:book_box_2/features/main/popular_loan_list/presentation/widgets/popular_loan_list_cell.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
 import 'package:book_box_2/gen/fonts.gen.dart';
 import 'package:book_box_2/resources/app_strings.dart';
@@ -323,7 +323,7 @@ class _MainPageState extends State<MainPage> {
                   left: 20.w,
                   right: 20.w,
                 ),
-                child: PopularLoanButtonCell(data: data),
+                child: PopularLoanListCell(data: data),
               );
             },
           ),
