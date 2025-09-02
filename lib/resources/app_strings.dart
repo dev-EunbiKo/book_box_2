@@ -13,6 +13,7 @@ class KStringSearch {
   static const String title = '도서 검색';
   static const String hintText = '검색어를 입력해주세요.';
   static const String history = '최근 검색 조건';
+  static const String empty = '검색 결과가 없습니다.';
 }
 
 class KStringError {
