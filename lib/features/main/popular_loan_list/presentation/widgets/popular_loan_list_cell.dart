@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:book_box_2/core/navigation/routes.dart';
 import 'package:book_box_2/core/utils.dart';
 import 'package:book_box_2/gen/colors.gen.dart';
 import 'package:book_box_2/gen/fonts.gen.dart';
@@ -17,7 +18,9 @@ class PopularLoanListCell extends StatelessWidget {
       splashFactory: NoSplash.splashFactory,
       highlightColor: BookBoxColor.black000,
       onTap: () {
-        // TODO: 페이지 렌딩 구현
+        Navigator.of(
+          context,
+        ).pushNamed(Routes.detail, arguments: data?.item?.isbn13);
       },
       child: Row(
         children: [
