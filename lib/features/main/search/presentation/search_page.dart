@@ -1,5 +1,7 @@
 import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
+import 'package:book_box_2/core/component/custom_view/no_data_placeholder.dart';
+import 'package:book_box_2/data/model/data_library/search/search_book_list_data_model.dart';
 import 'package:book_box_2/data/storage/search_storage.dart';
 import 'package:book_box_2/features/main/search/bloc/search_bloc.dart';
 import 'package:book_box_2/features/main/search/bloc/search_event.dart';
@@ -22,7 +24,15 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _textEditingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _isFocus = false;
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +45,7 @@ class _SearchPageState extends State<SearchPage> {
         },
         // 상태에 대해 여러 번 위젯을 리빌드
         builder: (context, state) {
+          final contextBloc = context.read<SearchBloc>();
           return Scaffold(
             appBar: CommonAppBar(
               title: KStringSearch.title,
@@ -50,25 +61,41 @@ class _SearchPageState extends State<SearchPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // 검색 TextField
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12.h,
-                              horizontal: 16.w,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // 검색 TextField
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 16.w,
+                          ),
+                          child: _searchBox(contextBloc),
+                        ),
+                        // 최근 검색어
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: _recentSearches(),
+                        ),
+
+                        if (state is SearchStateSuccess)
+                          Expanded(
+                            child: BlocBuilder<SearchBloc, SearchState>(
+                              buildWhen:
+                                  (previous, current) =>
+                                      current is SearchStateSuccess,
+                              builder: (
+                                BuildContext context,
+                                SearchState state,
+                              ) {
+                                return _listViewBuilderCell(
+                                  context,
+                                  state.searchData?.response?.docs,
+                                );
+                              },
                             ),
-                            child: _searchBox(),
                           ),
-                          // 최근 검색어
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: _recentSearches(),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ],
@@ -81,7 +108,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   // 검색 TextField
-  Widget _searchBox() {
+  Widget _searchBox(SearchBloc bloc) {
     return SizedBox(
       height: 44.h,
       child: Focus(
@@ -134,6 +161,20 @@ class _SearchPageState extends State<SearchPage> {
                     )
                     : null,
           ),
+          onSubmitted: (value) async {
+            // _textEditingController.text = '';
+            // api call
+            // await Future.delayed(const Duration(seconds: 3));
+            bloc.add(
+              GetSearchListEvent(
+                PMSearchBookList(
+                  keyword: _textEditingController.text,
+                  pageNo: 1,
+                ),
+                false,
+              ),
+            );
+          },
         ),
         onFocusChange: (isFocus) {
           setState(() {
@@ -186,5 +227,24 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  _listViewBuilderCell(BuildContext context, List<SearchListData>? list) {
+    if (list != null && list.isNotEmpty) {
+      // final contextBloc = context.read<SearchBloc>();
+
+      return ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (BuildContext context, int index) {
+          final data = list[index];
+          return Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(data.item?.bookname ?? "error?"),
+          );
+        },
+      );
+    } else {
+      return const NoDataPlaceHolder(title: KStringSearch.empty);
+    }
   }
 }

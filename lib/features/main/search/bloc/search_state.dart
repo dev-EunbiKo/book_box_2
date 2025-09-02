@@ -17,7 +17,8 @@ class SearchStateInitial extends SearchState {
 
 /// 조회 끝
 class SearchStateSuccess extends SearchState {
-  SearchStateSuccess();
+  SearchStateSuccess(BaseDMSearchList searchData)
+    : super(searchData: searchData);
 }
 
 /// 조회 중 에러
