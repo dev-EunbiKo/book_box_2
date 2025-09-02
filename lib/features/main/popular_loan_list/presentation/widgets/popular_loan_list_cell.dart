@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:book_box_2/data/model/data_library/popular_loan/select_popular_loan_list_data_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PopularLoanButtonCell extends StatelessWidget {
+class PopularLoanListCell extends StatelessWidget {
   final SelPopularListData? data;
 
-  const PopularLoanButtonCell({super.key, required this.data});
+  const PopularLoanListCell({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
