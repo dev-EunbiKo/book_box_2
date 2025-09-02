@@ -22,7 +22,7 @@ class MainNavigationPageState extends State<MainNavigationPage> {
   late int _selectedIndex;
 
   final List<Widget> _pages = [
-    const MainPage(),
+    const PopularLoanListPage(),
     SearchPage(),
     Container(color: BookBoxColor.background),
   ];

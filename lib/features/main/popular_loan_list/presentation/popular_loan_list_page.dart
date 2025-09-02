@@ -19,14 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class PopularLoanListPage extends StatefulWidget {
+  const PopularLoanListPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<PopularLoanListPage> createState() => _PopularLoanListPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _PopularLoanListPageState extends State<PopularLoanListPage> {
   final ScrollController firstSC = ScrollController();
   final ScrollController secondSC = ScrollController();
   final ScrollController thirdSC = ScrollController();
