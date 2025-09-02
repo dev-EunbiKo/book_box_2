@@ -1,6 +1,7 @@
 import 'package:book_box_2/core/component/app_bar/common_app_bar.dart';
 import 'package:book_box_2/core/component/app_bar/common_app_bar_button.dart';
 import 'package:book_box_2/core/component/custom_view/no_data_placeholder.dart';
+import 'package:book_box_2/core/extensions/extension_datetime.dart';
 import 'package:book_box_2/data/model/data_library/search/search_book_list_data_model.dart';
 import 'package:book_box_2/data/storage/search_storage.dart';
 import 'package:book_box_2/features/main/search/bloc/search_bloc.dart';
@@ -25,12 +26,17 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
   bool _isFocus = false;
+
+  final GlobalKey _key = GlobalKey();
+  OverlayEntry? _searchOverlayEntry;
 
   @override
   void dispose() {
     _textEditingController.dispose();
     _scrollController.dispose();
+    _hideSearchOverlay();
     super.dispose();
   }
 
@@ -66,18 +72,15 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         // 검색 TextField
                         Padding(
+                          key: _key,
                           padding: EdgeInsets.symmetric(
                             vertical: 12.h,
                             horizontal: 16.w,
                           ),
                           child: _searchBox(contextBloc),
                         ),
-                        // 최근 검색어
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: _recentSearches(),
-                        ),
 
+                        // 검색 결과 리스트
                         if (state is SearchStateSuccess)
                           Expanded(
                             child: BlocBuilder<SearchBloc, SearchState>(
@@ -161,10 +164,15 @@ class _SearchPageState extends State<SearchPage> {
                     )
                     : null,
           ),
-          onSubmitted: (value) async {
-            // _textEditingController.text = '';
-            // api call
-            // await Future.delayed(const Duration(seconds: 3));
+          onTap: _showSearchOverlay,
+          onSubmitted: (value) {
+            SearchStorage.addRecent(
+              SearchStorageRecentModel(
+                keyword: _textEditingController.text,
+                searchDate: DateTime.now().yyyyMMdd,
+              ),
+            );
+            _hideSearchOverlay();
             bloc.add(
               GetSearchListEvent(
                 PMSearchBookList(
@@ -185,58 +193,60 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  /// 최근 검색어 버튼
-  // TODO: 버튼이 아니라 밑에 컬럼으로 보이도록 변경할 것 >> 차라리 이 부분이 추천검색어가 나오는 게 나을 듯?
-  Widget _recentSearches() {
-    return SizedBox(
-      width: 100.w,
-      height: 30.h,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(BookBoxColor.background),
-          elevation: WidgetStateProperty.all(0),
-          padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
-        ),
-        onPressed: () async {
-          await SearchStorage.getRecentList().then((list) {
-            // Navigator.of(
-            //   context,
-            // ).pushNamed(Routes.searchRecent, arguments: list ?? []);
-          });
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 4.w),
-              child: SizedBox(
-                width: 16.w,
-                height: 16.w,
-                child: SvgPicture.asset(BookBoxAssets.images.icHistory.path),
+  void _showSearchOverlay() async {
+    final RenderBox renderBox =
+        _key.currentContext!.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final recentList = await SearchStorage.getRecentList() ?? [];
+    if (_searchOverlayEntry == null) {
+      _searchOverlayEntry = OverlayEntry(
+        builder:
+            (context) => Positioned(
+              left: position.dx + 20.r,
+              top: position.dy + size.height - 8.r,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(2.r),
+                child: SizedBox(
+                  width: size.width - 40.w,
+                  height: size.height * 3,
+                  child:
+                      (recentList.isNotEmpty && recentList.isNotEmpty)
+                          ? ListView.builder(
+                            itemBuilder: (context, index) {
+                              final item = recentList[index];
+                              return ListTile(
+                                title: Text(item.keyword!),
+                                subtitle: Text(item.searchDate!),
+                              );
+                            },
+                            itemCount: recentList.length,
+                          )
+                          : Text('최근 검색어 없음!!'),
+                ),
               ),
             ),
-            Text(
-              KStringSearch.history,
-              style: TextStyle(
-                color: BookBoxColor.black000,
-                fontSize: 12.sp,
-                fontFamily: BookBoxFontFamily.pretendardMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+      );
+
+      if (mounted) {
+        Overlay.of(context).insert(_searchOverlayEntry!);
+      }
+    }
+  }
+
+  void _hideSearchOverlay() {
+    _searchOverlayEntry?.remove();
+    _searchOverlayEntry = null;
   }
 
   _listViewBuilderCell(BuildContext context, List<SearchListData>? list) {
     if (list != null && list.isNotEmpty) {
-      // final contextBloc = context.read<SearchBloc>();
-
       return ListView.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
           final data = list[index];
+          // TODO: cell 만들기!!
           return Padding(
             padding: EdgeInsets.all(20),
             child: Text(data.item?.bookname ?? "error?"),
